@@ -65,14 +65,14 @@ function renderApp() {
       <header class="header">
         <div class="search-row">
           <input type="text" id="search" class="search-input" placeholder="Search..." autocomplete="off" />
-          <button class="help-btn" id="help-btn" title="Search help">?</button>
+          <button class="button button--help" id="help-btn" title="Search help">?</button>
         </div>
         <nav class="tabs">
-          <button class="tab active" data-category="all">All</button>
-          <button class="tab" data-category="bestiary">Bestiary</button>
-          <button class="tab" data-category="spell">Spells</button>
-          <button class="tab" data-category="item">Items</button>
-          <button class="tab" data-category="bookmarks">Bookmarks</button>
+          <button class="button button--tab active" data-category="all">All</button>
+          <button class="button button--tab" data-category="bestiary">Bestiary</button>
+          <button class="button button--tab" data-category="spell">Spells</button>
+          <button class="button button--tab" data-category="item">Items</button>
+          <button class="button button--tab" data-category="bookmarks">Bookmarks</button>
         </nav>
       </header>
       <main class="main">
@@ -83,7 +83,7 @@ function renderApp() {
         <div class="help-content">
           <div class="help-header">
             <h2>Search Help</h2>
-            <button class="help-close-btn" id="help-close-btn">×</button>
+            <button class="button button--close" id="help-close-btn">×</button>
           </div>
           <p>Type to search by name or description. You can also use filters:</p>
           <table class="help-table">
@@ -103,7 +103,7 @@ function renderApp() {
 
   // Bind events
   document.getElementById('search').addEventListener('input', handleSearch)
-  document.querySelectorAll('.tab').forEach(tab => {
+  document.querySelectorAll('.button--tab').forEach(tab => {
     tab.addEventListener('click', handleTabClick)
   })
   document.getElementById('help-btn').addEventListener('click', showHelp)
@@ -131,7 +131,7 @@ function handleSearch(e) {
 
 function handleTabClick(e) {
   currentCategory = e.target.dataset.category
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'))
+  document.querySelectorAll('.button--tab').forEach(t => t.classList.remove('active'))
   e.target.classList.add('active')
   selectedItem = null
   renderResults()
@@ -292,13 +292,13 @@ function renderDetail() {
 
   let content = `
     <div class="detail-header">
-      <button class="back-btn" id="back-btn">← Back</button>
-      <button class="bookmark-btn ${bookmarked ? 'bookmarked' : ''}" id="bookmark-btn">
-        ${bookmarked ? '★ Bookmarked' : '☆ Bookmark'}
+      <button class="button button--with-icon button--back" id="back-btn">Back</button>
+      <button class="button button--with-icon button--bookmark ${bookmarked ? 'bookmarked' : ''}" id="bookmark-btn">
+        ${bookmarked ? 'Bookmarked' : 'Bookmark'}
       </button>
     </div>
     <h1 class="detail-title">${escapeHtml(selectedItem.name)}</h1>
-    <span class="detail-type type-${selectedItem._type}">${getTypeLabel(selectedItem)}</span>
+    <div class="detail-tags">${renderDetailTags(selectedItem)}</div>
   `
 
   switch (selectedItem._type) {
@@ -324,6 +324,37 @@ function renderDetail() {
     toggleBookmark(selectedItem)
     renderDetail()
   })
+}
+
+function renderDetailTags(item) {
+  switch (item._type) {
+    case 'bestiary':
+      return renderBestiaryTags(item)
+    case 'spell':
+      return renderSpellTags(item)
+    case 'item':
+      return renderItemTags(item)
+    default:
+      return ''
+  }
+}
+
+function renderBestiaryTags(item) {
+  return `<span class="detail-tag type-bestiary">Lv ${item.level || '?'}</span>`
+}
+
+function renderSpellTags(item) {
+  let html = `<span class="detail-tag type-spell">Tier ${item.tier || '?'}</span>`
+  if (item.classes && item.classes.length > 0) {
+    item.classes.forEach(cls => {
+      html += `<span class="detail-tag type-spell">${titleCase(escapeHtml(cls))}</span>`
+    })
+  }
+  return html
+}
+
+function renderItemTags(item) {
+  return `<span class="detail-tag type-item">${escapeHtml(item.item_type || 'Item')}</span>`
 }
 
 function renderBestiaryDetail(item) {
@@ -391,18 +422,7 @@ function renderBestiaryDetail(item) {
 }
 
 function renderSpellDetail(item) {
-  let html = '';
-  if (item.classes && item.classes.length > 0) {
-    item.classes.forEach(cls => {
-      html += `
-        <div class="detail-type type-spell">
-          ${titleCase(escapeHtml(cls))}
-        </div>
-      `
-    })
-  }
-
-  html += `
+  let html = `
     <p class="detail-description">${escapeHtml(item.description || '')}</p>
     <div class="stat-grid">
       <div class="stat-block">
