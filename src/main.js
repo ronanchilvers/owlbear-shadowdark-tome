@@ -95,7 +95,8 @@ function renderApp() {
             <tr><td><code>source:core</code></td><td>Any item by source</td></tr>
           </table>
           <p><strong>Combine filters with text:</strong></p>
-          <p><code>tier:1 fire</code> — Tier 1 spells containing "fire"</p>
+          <p><code>tier:1 fire</code> - Tier 1 spells containing "fire"</p>
+          <p><code>lv:4 wolf</code> - Level 4 monsters "wolf"</p>
         </div>
       </div>
     </div>
@@ -254,7 +255,7 @@ function renderResults() {
         ${isBookmarked(item) ? '<span class="bookmark-indicator">★</span>' : ''}
         ${escapeHtml(item.name)}
       </span>
-      <span class="result-type type-${item._type}">${getTypeLabel(item)}</span>
+      <span class="tag tag--${item._type}">${getTypeLabel(item)}</span>
     </div>
   `).join('')
 
@@ -273,7 +274,7 @@ function renderResults() {
 function getTypeLabel(item) {
   switch (item._type) {
     case 'bestiary':
-      return `Lv ${item.level || '?'}`
+      return `Level ${item.level || '?'}`
     case 'spell':
       return `Tier ${item.tier || '?'}`
     case 'item':
@@ -291,14 +292,14 @@ function renderDetail() {
   const bookmarked = isBookmarked(selectedItem)
 
   let content = `
-    <div class="detail-header">
+    <div class="detail-row detail-row--header">
       <button class="button button--with-icon button--back" id="back-btn">Back</button>
       <button class="button button--with-icon button--bookmark ${bookmarked ? 'bookmarked' : ''}" id="bookmark-btn">
         ${bookmarked ? 'Bookmarked' : 'Bookmark'}
       </button>
     </div>
-    <h1 class="detail-title">${escapeHtml(selectedItem.name)}</h1>
-    <div class="detail-tags">${renderDetailTags(selectedItem)}</div>
+    <div class="detail-row detail-row--title"><h1>${escapeHtml(selectedItem.name)}</h1></div>
+    <div class="detail-row detail-row--tags">${renderDetailTags(selectedItem)}</div>
   `
 
   switch (selectedItem._type) {
@@ -311,6 +312,10 @@ function renderDetail() {
     case 'item':
       content += renderItemDetail(selectedItem)
       break
+  }
+
+  if (selectedItem.source) {
+    content += `<div class="detail-row detail-row--footer"><p>Source: ${escapeHtml(selectedItem.source)}</p></div>`
   }
 
   detailEl.innerHTML = content
@@ -340,27 +345,29 @@ function renderDetailTags(item) {
 }
 
 function renderBestiaryTags(item) {
-  return `<span class="detail-tag type-bestiary">Lv ${item.level || '?'}</span>`
+  let html = '';
+  html += `<span class="tag tag--bestiary">Level ${item.level || '?'}</span>`
+  return html;
 }
 
 function renderSpellTags(item) {
-  let html = `<span class="detail-tag type-spell">Tier ${item.tier || '?'}</span>`
+  let html = `<span class="tag tag--spell">Tier ${item.tier || '?'}</span>`
   if (item.classes && item.classes.length > 0) {
     item.classes.forEach(cls => {
-      html += `<span class="detail-tag type-spell">${titleCase(escapeHtml(cls))}</span>`
+      html += `<span class="tag tag--spell">${titleCase(escapeHtml(cls))}</span>`
     })
   }
   return html
 }
 
 function renderItemTags(item) {
-  return `<span class="detail-tag type-item">${escapeHtml(item.item_type || 'Item')}</span>`
+  return `<span class="tag tag--item">${escapeHtml(item.item_type || 'Item')}</span>`
 }
 
 function renderBestiaryDetail(item) {
   let html = `
-    <p class="detail-description">${escapeHtml(item.description || '')}</p>
-    <div class="stat-grid">
+    <div class="detail-row detail-row--description"><p>${escapeHtml(item.description || '')}</p></div>
+    <div class="detail-row stat stat--grid">
       <div class="stat-block">
         <span class="stat-label">AC</span>
         <span class="stat-value">${item.ac || '-'}${item.armor_type ? ` (${item.armor_type})` : ''}</span>
@@ -379,18 +386,14 @@ function renderBestiaryDetail(item) {
       </div>
     </div>
     <div class="detail-row">
-      <span class="detail-label">Attack:</span>
-      <span>${escapeHtml(item.attack || '-')}</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label">Movement:</span>
-      <span>${escapeHtml(item.movement || '-')}</span>
+      <p>Attack: ${escapeHtml(item.attack || '-')}</p>
+      <p>Movement: ${escapeHtml(item.movement || '-')}</p>
     </div>
   `
 
   if (item.stats) {
     html += `
-      <div class="stats-row">
+      <div class="detail-row stat stat--abilities">
         <div class="ability"><span class="ability-name">STR</span><span class="ability-value">${item.stats.str || '-'}</span></div>
         <div class="ability"><span class="ability-name">DEX</span><span class="ability-value">${item.stats.dex || '-'}</span></div>
         <div class="ability"><span class="ability-name">CON</span><span class="ability-value">${item.stats.con || '-'}</span></div>
@@ -402,20 +405,16 @@ function renderBestiaryDetail(item) {
   }
 
   if (item.actions && item.actions.length > 0) {
-    html += `<div class="actions-section"><h3>Actions</h3>`
+    html += `<div class="detail-row actions-section"><h3 class="actions-title">Actions</h3>`
     item.actions.forEach(action => {
       html += `
         <div class="action">
-          <span class="action-name">${escapeHtml(action.name || '')}</span>
-          <span class="action-desc">${escapeHtml(action.description || '')}</span>
+          <div class="action-name">${escapeHtml(action.name || '')}</div>
+          <div class="action-desc">${escapeHtml(action.description || '')}</div>
         </div>
       `
     })
     html += `</div>`
-  }
-
-  if (item.source) {
-    html += `<div class="source">Source: ${escapeHtml(item.source)}</div>`
   }
 
   return html
@@ -423,8 +422,8 @@ function renderBestiaryDetail(item) {
 
 function renderSpellDetail(item) {
   let html = `
-    <p class="detail-description">${escapeHtml(item.description || '')}</p>
-    <div class="stat-grid">
+    <div class="detail-row detail-row--description"><p>${escapeHtml(item.description || '')}</p></div>
+    <div class="detail-row stat stat--grid">
       <div class="stat-block">
         <span class="stat-label">Tier</span>
         <span class="stat-value">${item.tier || '-'}</span>
@@ -444,54 +443,51 @@ function renderSpellDetail(item) {
     </div>
   `
 
-  if (item.source) {
-    html += `<div class="source">Source: ${escapeHtml(item.source)}</div>`
-  }
-
   return html
 }
 
 function renderItemDetail(item) {
-  let html = `<p class="detail-description">${escapeHtml(item.description || '')}</p>`
+  let html = `<div class="detail-row detail-row--description"><p>${escapeHtml(item.description || '')}</p></div>`
 
+  let actions = "";
   if (item.Bonus) {
-    html += `
-      <div class="detail-section">
-        <span class="detail-label">Bonus:</span>
-        <span>${escapeHtml(item.Bonus)}</span>
+    actions += `
+      <div class="action action--bonus">
+        <div class="action-name">Bonus:</div>
+        <div class="action-desc">${escapeHtml(item.Bonus)}</div>
       </div>
     `
   }
 
   if (item.Benefit) {
-    html += `
-      <div class="detail-section benefit">
-        <span class="detail-label">Benefit:</span>
-        <span>${escapeHtml(item.Benefit)}</span>
-      </div>
-    `
-  }
-
-  if (item.Curse) {
-    html += `
-      <div class="detail-section curse">
-        <span class="detail-label">Curse:</span>
-        <span>${escapeHtml(item.Curse)}</span>
+    actions += `
+      <div class="action action--benefit">
+        <div class="action-name">Benefit:</div>
+        <div class="action-desc">${escapeHtml(item.Benefit)}</div>
       </div>
     `
   }
 
   if (item.Personality) {
-    html += `
-      <div class="detail-section">
-        <span class="detail-label">Personality:</span>
-        <span>${escapeHtml(item.Personality)}</span>
+    actions += `
+      <div class="action action--personality">
+        <div class="action-name">Personality:</div>
+        <div class="action-desc">${escapeHtml(item.Personality)}</div>
       </div>
     `
   }
 
-  if (item.item_type) {
-    html += `<div class="source">Type: ${escapeHtml(item.item_type)}</div>`
+  if (item.Curse) {
+    actions += `
+      <div class="action action--curse">
+        <div class="action-name">Curse:</div>
+        <div class="action-desc">${escapeHtml(item.Curse)}</div>
+      </div>
+    `
+  }
+
+  if (actions.length > 0) {
+    html += `<div class="actions-section">${actions}</div>`
   }
 
   return html
