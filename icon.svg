@@ -1,3 +1,58 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
-  <circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="#000" stroke-width="2" />
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+    <defs>
+        <!-- Define the arcane symbol as a mask to cut out from the book -->
+        <mask id="arcane-cutout">
+            <!-- White = visible, Black = cut out -->
+            <rect width="64" height="64" fill="white"/>
+            <!-- Central diamond - cut out -->
+            <path d="M35 22 L43 32 L35 42 L27 32 Z" fill="black" stroke="black" stroke-width="2"/>
+            <!-- Radiating lines - cut out -->
+            <line x1="35" y1="12" x2="35" y2="19" stroke="black" stroke-width="3" stroke-linecap="round"/>
+            <line x1="35" y1="45" x2="35" y2="52" stroke="black" stroke-width="3" stroke-linecap="round"/>
+            <line x1="18" y1="32" x2="25" y2="32" stroke="black" stroke-width="3" stroke-linecap="round"/>
+            <line x1="45" y1="32" x2="52" y2="32" stroke="black" stroke-width="3" stroke-linecap="round"/>
+            <!-- Corner accents - cut out -->
+            <line x1="24" y1="21" x2="28" y2="25" stroke="black" stroke-width="2" stroke-linecap="round"/>
+            <line x1="46" y1="21" x2="42" y2="25" stroke="black" stroke-width="2" stroke-linecap="round"/>
+            <line x1="24" y1="43" x2="28" y2="39" stroke="black" stroke-width="2" stroke-linecap="round"/>
+            <line x1="46" y1="43" x2="42" y2="39" stroke="black" stroke-width="2" stroke-linecap="round"/>
+            <!-- Inner eye circle - keep visible (white) -->
+            <circle cx="35" cy="32" r="4" fill="white"/>
+            <!-- Outer decorative ring around the diamond -->
+            <circle cx="35" cy="32" r="16" fill="none" stroke="black" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <!-- Small dots at cardinal points -->
+            <circle cx="35" cy="10" r="2" fill="black"/>
+            <circle cx="35" cy="54" r="2" fill="black"/>
+            <circle cx="16" cy="32" r="2" fill="black"/>
+            <!-- Corner rune marks - top -->
+            <line x1="22" y1="12" x2="22" y2="16" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="20" y1="14" x2="24" y2="14" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="48" y1="12" x2="48" y2="16" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="46" y1="14" x2="50" y2="14" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            <!-- Corner rune marks - bottom -->
+            <line x1="22" y1="48" x2="22" y2="52" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="20" y1="50" x2="24" y2="50" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="48" y1="48" x2="48" y2="52" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="46" y1="50" x2="50" y2="50" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            <!-- Small triangular accents -->
+            <path d="M35 6 L37 10 L33 10 Z" fill="black"/>
+            <path d="M35 58 L37 54 L33 54 Z" fill="black"/>
+            <!-- Spine decoration - horizontal lines -->
+            <line x1="12" y1="18" x2="17" y2="18" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="12" y1="24" x2="17" y2="24" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="12" y1="40" x2="17" y2="40" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="12" y1="46" x2="17" y2="46" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+        </mask>
+    </defs>
+    <!-- Book shape with arcane symbol cut out -->
+    <g mask="url(#arcane-cutout)">
+        <!-- Main book body -->
+        <path d="M10 6 L10 58 Q10 62 14 62 L54 62 Q58 62 58 58 L58 6 Q58 2 54 2 L14 2 Q10 2 10 6 Z" fill="white"/>
+        <!-- Book spine -->
+        <rect x="10" y="2" width="8" height="60" rx="4" fill="white"/>
+    </g>
+    <!-- Book clasp on the right edge -->
+    <rect x="54" y="26" width="8" height="12" rx="2" fill="white"/>
+    <rect x="56" y="29" width="4" height="6" rx="1" fill="black"/>
 </svg>
