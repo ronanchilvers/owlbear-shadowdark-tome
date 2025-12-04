@@ -16,6 +16,8 @@
   --success: #4ade80;
   --warning: #fbbf24;
   --danger: #ef4444;
+  /* Used for: bookmark star indicator and button */
+  --bookmark: #fbbf24;
 
   /* Tag colours - bestiary (monster level badges) */
   --tag-bestiary-bg: rgba(0, 0, 0, 0.5);
@@ -89,7 +91,14 @@ html, body {
   border-bottom: 1px solid var(--border-color);
 }
 
+.search-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .search-input {
+  flex: 1;
   width: 100%;
   padding: 10px 12px;
   font-size: var(--font-size-base);
@@ -107,6 +116,123 @@ html, body {
 
 .search-input::placeholder {
   color: var(--text-secondary);
+}
+
+/* Help button */
+.help-btn {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.help-btn:hover {
+  background-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+/* Help overlay */
+.help-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+
+.help-overlay.hidden {
+  display: none;
+}
+
+.help-content {
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius-md);
+  padding: 16px;
+  max-width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.help-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.help-header h2 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+}
+
+.help-close-btn {
+  width: 28px;
+  height: 28px;
+  font-size: var(--font-size-lg);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.help-close-btn:hover {
+  background-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.help-content p {
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.help-table {
+  width: 100%;
+  margin-bottom: 12px;
+  border-collapse: collapse;
+}
+
+.help-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.help-table td:first-child {
+  white-space: nowrap;
+}
+
+.help-table code {
+  background-color: var(--bg-tertiary);
+  padding: 2px 6px;
+  border-radius: var(--border-radius-sm);
+  font-family: monospace;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+}
+
+.help-content p code {
+  background-color: var(--bg-tertiary);
+  padding: 2px 6px;
+  border-radius: var(--border-radius-sm);
+  font-family: monospace;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
 }
 
 /* Tabs */
@@ -221,7 +347,6 @@ html, body {
 }
 
 .back-btn {
-  display: inline-block;
   padding: 6px 12px;
   font-size: var(--font-size-base);
   border: none;
@@ -230,7 +355,6 @@ html, body {
   color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s;
-  margin-bottom: 12px;
 }
 
 .back-btn:hover {
@@ -395,6 +519,48 @@ html, body {
   border-top: 1px solid var(--border-color);
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
+}
+
+/* Detail header with back and bookmark buttons */
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+/* Bookmark button */
+.bookmark-btn {
+  padding: 6px 12px;
+  font-size: var(--font-size-base);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.bookmark-btn:hover {
+  background-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.bookmark-btn.bookmarked {
+  background-color: var(--bookmark);
+  border-color: var(--bookmark);
+  color: rgb(25, 25, 25);
+}
+
+.bookmark-btn.bookmarked:hover {
+  background-color: var(--warning);
+  border-color: var(--warning);
+}
+
+/* Bookmark indicator in result list */
+.bookmark-indicator {
+  color: var(--bookmark);
+  margin-right: 4px;
 }
 
 /* Scrollbar styling */

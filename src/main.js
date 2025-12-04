@@ -9,10 +9,51 @@ const spells = spellData.map(item => ({ ...item, _type: 'spell' }))
 const items = itemData.map(item => ({ ...item, _type: 'item' }))
 const allData = [...bestiary, ...spells, ...items]
 
+// Bookmarks storage key
+const BOOKMARKS_KEY = 'shadowdark-bookmarks'
+
 // State
 let currentCategory = 'all'
 let currentSearch = ''
 let selectedItem = null
+let bookmarks = loadBookmarks()
+
+// Bookmark functions
+function loadBookmarks() {
+  try {
+    const stored = localStorage.getItem(BOOKMARKS_KEY)
+    return stored ? JSON.parse(stored) : []
+  } catch (e) {
+    console.error('Failed to load bookmarks:', e)
+    return []
+  }
+}
+
+function saveBookmarks() {
+  try {
+    localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(bookmarks))
+  } catch (e) {
+    console.error('Failed to save bookmarks:', e)
+  }
+}
+
+function getItemId(item) {
+  return `${item._type}:${item.name}`
+}
+
+function isBookmarked(item) {
+  return bookmarks.includes(getItemId(item))
+}
+
+function toggleBookmark(item) {
+  const id = getItemId(item)
+  if (bookmarks.includes(id)) {
+    bookmarks = bookmarks.filter(b => b !== id)
+  } else {
+    bookmarks.push(id)
+  }
+  saveBookmarks()
+}
 
 // DOM Elements
 const app = document.querySelector('#app')
@@ -22,18 +63,41 @@ function renderApp() {
   app.innerHTML = `
     <div class="container">
       <header class="header">
-        <input type="text" id="search" class="search-input" placeholder="Search..." autocomplete="off" />
+        <div class="search-row">
+          <input type="text" id="search" class="search-input" placeholder="Search..." autocomplete="off" />
+          <button class="help-btn" id="help-btn" title="Search help">?</button>
+        </div>
         <nav class="tabs">
           <button class="tab active" data-category="all">All</button>
           <button class="tab" data-category="bestiary">Bestiary</button>
           <button class="tab" data-category="spell">Spells</button>
           <button class="tab" data-category="item">Items</button>
+          <button class="tab" data-category="bookmarks">Bookmarks</button>
         </nav>
       </header>
       <main class="main">
         <div id="results" class="results"></div>
         <div id="detail" class="detail hidden"></div>
       </main>
+      <div id="help-overlay" class="help-overlay hidden">
+        <div class="help-content">
+          <div class="help-header">
+            <h2>Search Help</h2>
+            <button class="help-close-btn" id="help-close-btn">×</button>
+          </div>
+          <p>Type to search by name or description. You can also use filters:</p>
+          <table class="help-table">
+            <tr><td><code>tier:1</code></td><td>Spells by tier</td></tr>
+            <tr><td><code>level:3</code> or <code>lv:3</code></td><td>Monsters by level</td></tr>
+            <tr><td><code>class:wizard</code></td><td>Spells by class</td></tr>
+            <tr><td><code>type:armor</code></td><td>Items by type</td></tr>
+            <tr><td><code>alignment:chaotic</code></td><td>Monsters by alignment</td></tr>
+            <tr><td><code>source:core</code></td><td>Any item by source</td></tr>
+          </table>
+          <p><strong>Combine filters with text:</strong></p>
+          <p><code>tier:1 fire</code> — Tier 1 spells containing "fire"</p>
+        </div>
+      </div>
     </div>
   `
 
@@ -42,8 +106,21 @@ function renderApp() {
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', handleTabClick)
   })
+  document.getElementById('help-btn').addEventListener('click', showHelp)
+  document.getElementById('help-close-btn').addEventListener('click', hideHelp)
+  document.getElementById('help-overlay').addEventListener('click', (e) => {
+    if (e.target.id === 'help-overlay') hideHelp()
+  })
 
   renderResults()
+}
+
+function showHelp() {
+  document.getElementById('help-overlay').classList.remove('hidden')
+}
+
+function hideHelp() {
+  document.getElementById('help-overlay').classList.add('hidden')
 }
 
 function handleSearch(e) {
@@ -60,15 +137,87 @@ function handleTabClick(e) {
   renderResults()
 }
 
+// Parse search string for filters like "tier:1" or "level:3"
+function parseSearch(searchString) {
+  const filters = {}
+  let textSearch = searchString
+
+  // Match patterns like "key:value"
+  const filterPattern = /(\w+):(\w+)/g
+  let match
+
+  while ((match = filterPattern.exec(searchString)) !== null) {
+    const key = match[1].toLowerCase()
+    const value = match[2].toLowerCase()
+    filters[key] = value
+    // Remove the filter from the text search
+    textSearch = textSearch.replace(match[0], '')
+  }
+
+  return {
+    filters,
+    textSearch: textSearch.trim().toLowerCase()
+  }
+}
+
+// Check if an item matches the given filters
+function matchesFilters(item, filters) {
+  for (const [key, value] of Object.entries(filters)) {
+    switch (key) {
+      case 'tier':
+        if (item._type !== 'spell' || String(item.tier) !== value) return false
+        break
+      case 'level':
+      case 'lv':
+        if (item._type !== 'bestiary' || String(item.level) !== value) return false
+        break
+      case 'class':
+        if (item._type !== 'spell' || !item.classes?.some(c => c.toLowerCase() === value)) return false
+        break
+      case 'type':
+        if (item._type !== 'item' || !item.item_type?.toLowerCase().includes(value)) return false
+        break
+      case 'alignment':
+        if (item._type !== 'bestiary' || !item.alignment?.toLowerCase().includes(value)) return false
+        break
+      case 'source':
+        if (!item.source?.toLowerCase().includes(value)) return false
+        break
+      default:
+        // Unknown filter, ignore
+        break
+    }
+  }
+  return true
+}
+
 function getFilteredData() {
-  let data = currentCategory === 'all' ? allData : allData.filter(item => item._type === currentCategory)
+  let data
+
+  if (currentCategory === 'all') {
+    data = allData
+  } else if (currentCategory === 'bookmarks') {
+    data = allData.filter(item => isBookmarked(item))
+  } else {
+    data = allData.filter(item => item._type === currentCategory)
+  }
 
   if (currentSearch) {
-    data = data.filter(item => {
-      const name = (item.name || '').toLowerCase()
-      const description = (item.description || '').toLowerCase()
-      return name.includes(currentSearch) || description.includes(currentSearch)
-    })
+    const { filters, textSearch } = parseSearch(currentSearch)
+
+    // Apply filters
+    if (Object.keys(filters).length > 0) {
+      data = data.filter(item => matchesFilters(item, filters))
+    }
+
+    // Apply text search
+    if (textSearch) {
+      data = data.filter(item => {
+        const name = (item.name || '').toLowerCase()
+        const description = (item.description || '').toLowerCase()
+        return name.includes(textSearch) || description.includes(textSearch)
+      })
+    }
   }
 
   // Sort alphabetically by name
@@ -92,13 +241,19 @@ function renderResults() {
   const filtered = getFilteredData()
 
   if (filtered.length === 0) {
-    resultsEl.innerHTML = '<div class="no-results">No results found</div>'
+    const message = currentCategory === 'bookmarks'
+      ? 'No bookmarks yet'
+      : 'No results found'
+    resultsEl.innerHTML = `<div class="no-results">${message}</div>`
     return
   }
 
   resultsEl.innerHTML = filtered.map((item, index) => `
     <div class="result-item" data-index="${index}">
-      <span class="result-name">${escapeHtml(item.name)}</span>
+      <span class="result-name">
+        ${isBookmarked(item) ? '<span class="bookmark-indicator">★</span>' : ''}
+        ${escapeHtml(item.name)}
+      </span>
       <span class="result-type type-${item._type}">${getTypeLabel(item)}</span>
     </div>
   `).join('')
@@ -133,8 +288,15 @@ function renderDetail() {
 
   if (!selectedItem) return
 
+  const bookmarked = isBookmarked(selectedItem)
+
   let content = `
-    <button class="back-btn" id="back-btn">← Back</button>
+    <div class="detail-header">
+      <button class="back-btn" id="back-btn">← Back</button>
+      <button class="bookmark-btn ${bookmarked ? 'bookmarked' : ''}" id="bookmark-btn">
+        ${bookmarked ? '★ Bookmarked' : '☆ Bookmark'}
+      </button>
+    </div>
     <h1 class="detail-title">${escapeHtml(selectedItem.name)}</h1>
     <span class="detail-type type-${selectedItem._type}">${getTypeLabel(selectedItem)}</span>
   `
@@ -156,6 +318,11 @@ function renderDetail() {
   document.getElementById('back-btn').addEventListener('click', () => {
     selectedItem = null
     renderResults()
+  })
+
+  document.getElementById('bookmark-btn').addEventListener('click', () => {
+    toggleBookmark(selectedItem)
+    renderDetail()
   })
 }
 
