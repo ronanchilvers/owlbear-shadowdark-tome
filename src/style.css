@@ -18,14 +18,14 @@
   --danger: #ef4444;
 
   /* Tag colours - bestiary (monster level badges) */
-  --tag-bestiary-bg: rgba(239, 68, 68, 0.2);
-  --tag-bestiary-text: #fca5a5;
+  --tag-bestiary-bg: rgba(0, 0, 0, 0.5);
+  --tag-bestiary-text: rgba(255, 255, 255, 1);
   /* Tag colours - spell (spell tier badges) */
-  --tag-spell-bg: rgba(125, 125, 255, 0.2);
-  --tag-spell-text: rgb(175, 175, 255);
+  --tag-spell-bg: rgba(0, 0, 0, 0.5);
+  --tag-spell-text: rgba(255, 255, 255, 1);
   /* Tag colours - item (item type badges) */
-  --tag-item-bg: rgba(251, 191, 36, 0.2);
-  --tag-item-text: #fde047;
+  --tag-item-bg: rgba(0, 0, 0, 0.5);
+  --tag-item-text: rgba(255, 255, 255, 1);
 
   --font-family: sans-serif;
 
@@ -36,6 +36,14 @@
   --font-weight-medium: 500;
   /* Used for: tabs, titles, stat values, labels, ability names/values, action names, section headings */
   --font-weight-bold: 600;
+
+  /* Border radius */
+  /* Used for: tabs, type badges, back button, detail type badge */
+  --border-radius-sm: 3px;
+  /* Used for: search input, result items, stat blocks, stats row, actions, detail sections */
+  --border-radius-md: 4px;
+  /* Used for: scrollbar thumb */
+  --border-radius-full: 3px;
 
   /* Font sizes */
   /* Used for: stat labels, ability score names */
@@ -86,7 +94,7 @@ html, body {
   padding: 10px 12px;
   font-size: var(--font-size-base);
   border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border-radius: var(--border-radius-md);
   background-color: var(--bg-tertiary);
   color: var(--text-primary);
   outline: none;
@@ -114,7 +122,7 @@ html, body {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   background-color: var(--bg-tertiary);
   color: var(--text-secondary);
   cursor: pointer;
@@ -156,7 +164,7 @@ html, body {
   padding: 10px 12px;
   margin-bottom: 4px;
   background-color: var(--bg-secondary);
-  border-radius: 6px;
+  border-radius: var(--border-radius-md);
   cursor: pointer;
   transition: all 0.15s;
 }
@@ -178,7 +186,7 @@ html, body {
 .result-type {
   font-size: var(--font-size-sm);
   padding: 3px 8px;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   background-color: var(--bg-tertiary);
   color: var(--text-secondary);
   flex-shrink: 0;
@@ -217,7 +225,7 @@ html, body {
   padding: 6px 12px;
   font-size: var(--font-size-base);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   background-color: var(--bg-secondary);
   color: var(--text-secondary);
   cursor: pointer;
@@ -241,7 +249,7 @@ html, body {
   display: inline-block;
   font-size: var(--font-size-sm);
   padding: 4px 10px;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
   margin-bottom: 16px;
 }
 
@@ -263,7 +271,7 @@ html, body {
 .stat-block {
   background-color: var(--bg-secondary);
   padding: 10px;
-  border-radius: 6px;
+  border-radius: var(--border-radius-md);
   text-align: center;
 }
 
@@ -305,7 +313,7 @@ html, body {
   margin: 16px 0;
   padding: 12px;
   background-color: var(--bg-secondary);
-  border-radius: 6px;
+  border-radius: var(--border-radius-md);
 }
 
 .ability {
@@ -345,7 +353,7 @@ html, body {
 .action {
   background-color: var(--bg-secondary);
   padding: 10px 12px;
-  border-radius: 6px;
+  border-radius: var(--border-radius-md);
   margin-bottom: 8px;
   border-left: 3px solid var(--accent);
 }
@@ -368,7 +376,7 @@ html, body {
 .detail-section {
   padding: 12px;
   background-color: var(--bg-secondary);
-  border-radius: 6px;
+  border-radius: var(--border-radius-md);
   margin-bottom: 10px;
 }
 
@@ -403,7 +411,7 @@ html, body {
 .results::-webkit-scrollbar-thumb,
 .detail::-webkit-scrollbar-thumb {
   background: var(--border-color);
-  border-radius: 3px;
+  border-radius: var(--border-radius-full);
 }
 
 .results::-webkit-scrollbar-thumb:hover,

@@ -224,7 +224,18 @@ function renderBestiaryDetail(item) {
 }
 
 function renderSpellDetail(item) {
-  let html = `
+  let html = '';
+  if (item.classes && item.classes.length > 0) {
+    item.classes.forEach(cls => {
+      html += `
+        <div class="detail-type type-spell">
+          ${titleCase(escapeHtml(cls))}
+        </div>
+      `
+    })
+  }
+
+  html += `
     <p class="detail-description">${escapeHtml(item.description || '')}</p>
     <div class="stat-grid">
       <div class="stat-block">
@@ -245,15 +256,6 @@ function renderSpellDetail(item) {
       </div>
     </div>
   `
-
-  if (item.classes && item.classes.length > 0) {
-    html += `
-      <div class="detail-row">
-        <span class="detail-label">Classes:</span>
-        <span>${item.classes.map(c => escapeHtml(c)).join(', ')}</span>
-      </div>
-    `
-  }
 
   if (item.source) {
     html += `<div class="source">Source: ${escapeHtml(item.source)}</div>`
@@ -313,6 +315,10 @@ function escapeHtml(str) {
   const div = document.createElement('div')
   div.textContent = str
   return div.innerHTML
+}
+
+function titleCase(str) {
+    return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
 // Initialize
