@@ -68,11 +68,11 @@ function renderApp() {
           <button class="button button--help" id="help-btn" title="Search help">?</button>
         </div>
         <nav class="tabs">
-          <button class="button button--tab active" data-category="all">All</button>
-          <button class="button button--tab" data-category="bestiary">Bestiary</button>
-          <button class="button button--tab" data-category="spell">Spells</button>
-          <button class="button button--tab" data-category="item">Items</button>
-          <button class="button button--tab" data-category="bookmarks">Bookmarks</button>
+          <button class="button button-tab button-tab--active" data-category="all">All</button>
+          <button class="button button-tab" data-category="bestiary">Bestiary</button>
+          <button class="button button-tab" data-category="spell">Spells</button>
+          <button class="button button-tab" data-category="item">Items</button>
+          <button class="button button-tab" data-category="bookmarks">Bookmarks</button>
         </nav>
       </header>
       <main class="main">
@@ -104,7 +104,7 @@ function renderApp() {
 
   // Bind events
   document.getElementById('search').addEventListener('input', handleSearch)
-  document.querySelectorAll('.button--tab').forEach(tab => {
+  document.querySelectorAll('.button-tab').forEach(tab => {
     tab.addEventListener('click', handleTabClick)
   })
   document.getElementById('help-btn').addEventListener('click', showHelp)
@@ -132,8 +132,8 @@ function handleSearch(e) {
 
 function handleTabClick(e) {
   currentCategory = e.target.dataset.category
-  document.querySelectorAll('.button--tab').forEach(t => t.classList.remove('active'))
-  e.target.classList.add('active')
+  document.querySelectorAll('.button-tab').forEach(t => t.classList.remove('button-tab--active'))
+  e.target.classList.add('button-tab--active')
   selectedItem = null
   renderResults()
 }
@@ -298,8 +298,8 @@ function renderDetail() {
         ${bookmarked ? 'Bookmarked' : 'Bookmark'}
       </button>
     </div>
-    <div class="detail-row detail-row--title"><h1>${escapeHtml(selectedItem.name)}</h1></div>
     <div class="detail-row detail-row--tags">${renderDetailTags(selectedItem)}</div>
+    <div class="detail-row detail-row--title"><h1>${escapeHtml(selectedItem.name)}</h1></div>
   `
 
   switch (selectedItem._type) {
@@ -351,7 +351,8 @@ function renderBestiaryTags(item) {
 }
 
 function renderSpellTags(item) {
-  let html = `<span class="tag tag--spell">Tier ${item.tier || '?'}</span>`
+  // let html = `<span class="tag tag--spell">Tier ${item.tier || '?'}</span>`
+  let html = ''
   if (item.classes && item.classes.length > 0) {
     item.classes.forEach(cls => {
       html += `<span class="tag tag--spell">${titleCase(escapeHtml(cls))}</span>`

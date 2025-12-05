@@ -1,9 +1,3 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 :root {
   /* Colours */
   --bg-primary: rgb(25, 25, 25);
@@ -20,6 +14,15 @@
   /* Used for: bookmark star indicator and button */
   --bookmark: #ffc444;
 
+  /* Fonts */
+  --font-family: sans-serif;
+  /* Used for: body text */
+  --font-weight-normal: 400;
+  /* Used for: result names */
+  --font-weight-medium: 500;
+  /* Used for: tabs, titles, stat values, labels, ability names/values, action names, section headings */
+  --font-weight-bold: 600;
+
   /* Tag colours - bestiary (monster level badges) */
   --tag-bestiary-bg: rgba(255, 255, 255, 0.2);
   --tag-bestiary-text: rgba(255, 255, 255, 1);
@@ -30,15 +33,10 @@
   --tag-item-bg: rgba(255, 255, 255, 0.2);
   --tag-item-text: rgba(255, 255, 255, 1);
 
-  --font-family: sans-serif;
-
-  /* Font weights */
-  /* Used for: body text */
-  --font-weight-normal: 400;
-  /* Used for: result names */
-  --font-weight-medium: 500;
-  /* Used for: tabs, titles, stat values, labels, ability names/values, action names, section headings */
-  --font-weight-bold: 600;
+  /* Buttons */
+  --button-border: rgba(114, 135, 255, 0.2);
+  --button-border-hover: rgba(114, 135, 255, 0.5);
+  --button-border-active: rgba(114, 135, 255, 1);
 
   /* Border radius */
   /* Used for: tabs, type badges, back button, detail type badge */
@@ -46,7 +44,7 @@
   /* Used for: search input, result items, stat blocks, stats row, actions, detail sections */
   --border-radius-md: 4px;
   /* Used for: scrollbar thumb */
-  --border-radius-full: 3px;
+  --border-radius-full: 10px;
 
   /* Font sizes */
   /* Used for: stat labels, ability score names */
@@ -59,6 +57,12 @@
   --font-size-lg: 1.4rem;
   /* Used for: detail page titles */
   --font-size-xl: 1.6rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 html, body {
@@ -97,95 +101,97 @@ p {
 
 /* Base button styles */
 .button {
-  padding: 0.4rem 0.6rem;
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
-  font-family: inherit;
-  border: none;
-  border-radius: var(--border-radius-sm);
-  background-color: var(--bg-tertiary);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.2s;
-}
+    padding: 0.4rem 0.6rem;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    font-family: inherit;
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-color);
 
-.button:hover {
-  background-color: var(--border-color);
-  color: var(--text-primary);
-}
+    &:active {
+        border: 1px solid var(--button-border-active);
+    }
+    &:hover {
+        border: 1px solid var(--button-border-hover);
+        color: var(--text-primary);
+    }
 
-/* Tab button modifier */
-.button--tab {
-  flex: 1;
-  padding: 8px 12px;
-  font-size: var(--font-size-sm);
-}
+    /* Tab button modifier */
+    &.button-tab {
+        flex: 1;
+        padding: 8px 12px;
+        font-size: var(--font-size-sm);
+        border: none !important;
+    }
+    &.button-tab--active {
+        background-color: var(--accent);
+        color: white;
+    }
 
-.button--tab.active {
-  background-color: var(--accent);
-  color: white;
-}
+    /* Icon button modifier (adds spacing for ::before icon) */
+    &.button--with-icon {
+        position: relative;
+        padding-left: 1.75rem;
+    }
+    &.button--with-icon::before {
+        text-align: center;
+        position: absolute;
+        left: 0.5rem;
+    }
 
-/* Icon button modifier (adds spacing for ::before icon) */
-.button--with-icon {
-    position: relative;
-    padding-left: 1.75rem;
-}
-.button--with-icon::before {
-  text-align: center;
-  position: absolute;
-  left: 0.5rem;
-}
+    /* Back button modifier */
+    &.button--back {
+        background-color: var(--bg-secondary);
+    }
+    &.button--back::before {
+        content: "←";
+        top: 0.4rem;
+    }
 
-/* Back button modifier */
-.button--back {
-  background-color: var(--bg-secondary);
-}
+    /* Bookmark button modifier */
+    &.button--bookmark {
+        background-color: var(--bg-secondary);
+    }
 
-.button--back::before {
-  content: "←";
-  top: 0.4rem;
-}
+    &.button--bookmark::before {
+        content: "☆";
+        top: 0.2rem;
+    }
 
-/* Bookmark button modifier */
-.button--bookmark {
-  background-color: var(--bg-secondary);
-}
+    &.button--bookmark.bookmarked::before {
+        content: "★";
+    }
 
-.button--bookmark::before {
-  content: "☆";
-  top: 0.2rem;
-}
+    &.button--bookmark.bookmarked {
+        background-color: var(--bookmark);
+        color: rgb(25, 25, 25);
+    }
 
-.button--bookmark.bookmarked::before {
-  content: "★";
-}
+    &.button--bookmark.bookmarked:hover {
+        background-color: var(--warning);
+    }
 
-.button--bookmark.bookmarked {
-  background-color: var(--bookmark);
-  color: rgb(25, 25, 25);
-}
+    /* Help button modifier (square) */
+    &.button--help {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        flex-shrink: 0;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+    }
 
-.button--bookmark.bookmarked:hover {
-  background-color: var(--warning);
-}
-
-/* Help button modifier (square) */
-.button--help {
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  flex-shrink: 0;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-md);
-}
-
-/* Close button modifier (square) */
-.button--close {
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  font-size: var(--font-size-lg);
+    /* Close button modifier (square) */
+    &.button--close {
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        font-size: var(--font-size-lg);
+    }
 }
 
 /* ===================
@@ -194,43 +200,46 @@ p {
 
 .header {
   flex-shrink: 0;
-  padding: 12px;
+  padding: 0.5rem;
   background-color: var(--bg-secondary);
   border-bottom: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .search-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
 
-.search-input {
-  flex: 1;
-  width: 100%;
-  padding: 10px 12px;
-  font-size: var(--font-size-base);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-md);
-  background-color: var(--bg-tertiary);
-  color: var(--text-primary);
-  outline: none;
-  transition: border-color 0.2s;
-}
+    .search-input {
+        flex: 1;
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        font-size: var(--font-size-base);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+        background-color: var(--bg-tertiary);
+        color: var(--text-primary);
+        outline: none;
+        transition: border-color 0.2s;
+    }
 
-.search-input:focus {
-  border-color: var(--accent);
-}
+    .search-input:focus {
+        border-color: var(--accent);
+    }
 
-.search-input::placeholder {
-  color: var(--text-secondary);
+    .search-input::placeholder {
+        color: var(--text-secondary);
+    }
 }
 
 /* Tabs */
 .tabs {
-  display: flex;
-  gap: 4px;
-  margin-top: 10px;
+    display: flex;
+    gap: 0.25rem;
+    flex-direction: row;
 }
 
 /* ===================
@@ -341,7 +350,7 @@ p {
 
     .result-item:hover {
         background-color: var(--border-color);
-        transform: translateX(2px);
+        /*transform: translateX(2px);*/
     }
 
     .result-name {
@@ -400,7 +409,7 @@ p {
         flex-direction: row;
         align-items: flex-start;
         gap: 0.5rem;
-
+        float: right;
     }
 
     &.detail-row--description p {
@@ -416,10 +425,9 @@ p {
 }
 
 .tag {
-    /*display: inline-block;*/
-    font-size: var(--font-size-sm);
-    padding: 0.3rem 0.6rem;
-    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-xs);
+    padding: 0.4rem 1rem;
+    border-radius: var(--border-radius-full);
 
     &.tag--bestiary {
         background-color: var(--tag-bestiary-bg);
