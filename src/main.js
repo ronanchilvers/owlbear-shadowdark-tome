@@ -45,7 +45,13 @@ function isBookmarked(item) {
   return bookmarks.includes(getItemId(item))
 }
 
+// function toggleBookmarkFromEvent(e) {
+//   const resultsEl = document.getElementById('results')
+//   toggleBookmark(item)
+// }
+
 function toggleBookmark(item) {
+  console.log(item)
   const id = getItemId(item)
   if (bookmarks.includes(id)) {
     bookmarks = bookmarks.filter(b => b !== id)
@@ -263,7 +269,7 @@ function renderResults() {
   resultsEl.innerHTML = filtered.map((item, index) => `
     <div class="result-item" data-index="${index}">
       <span class="result-name">
-        ${isBookmarked(item) ? '<span class="bookmark-indicator">★</span>' : ''}
+        <span class="bookmark-indicator ${isBookmarked(item) ? 'bookmark-indicator--active' : ''}">${isBookmarked(item) ? '★' : '★'}</span>
         ${escapeHtml(item.name)}
       </span>
       <span class="tag tag--${item._type}">${getTypeLabel(item)}</span>
@@ -274,9 +280,14 @@ function renderResults() {
   resultsEl._filteredData = filtered
 
   resultsEl.querySelectorAll('.result-item').forEach(el => {
-    el.addEventListener('click', () => {
+    el.addEventListener('click', (e) => {
       const index = parseInt(el.dataset.index)
       selectedItem = resultsEl._filteredData[index]
+      if (e.target.classList.contains('bookmark-indicator')) {
+        toggleBookmark(selectedItem)
+        e.target.classList[isBookmarked(selectedItem) ? 'add' : 'remove']('bookmark-indicator--active')
+        return
+      }
       renderResults()
     })
   })
@@ -306,7 +317,7 @@ function renderDetail() {
     <div class="detail-row detail-row--header">
       <button class="button button--with-icon button--back" id="back-btn">Back</button>
       <button class="button button--with-icon button--bookmark ${bookmarked ? 'bookmarked' : ''}" id="bookmark-btn">
-        ${bookmarked ? 'Bookmarked' : 'Bookmark'}
+        ${bookmarked ? 'Bookmark' : 'Bookmark'}
       </button>
     </div>
     <div class="detail-row detail-row--tags">${renderDetailTags(selectedItem)}</div>

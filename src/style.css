@@ -12,7 +12,8 @@
   --warning: #ce8a02;
   --danger: #9b0303;
   /* Used for: bookmark star indicator and button */
-  --bookmark: #ffc444;
+  --bookmark: #666666;
+  --bookmark-active: #ffc444;
 
   /* Fonts */
   --font-family: sans-serif;
@@ -158,21 +159,22 @@ p {
     }
 
     &.button--bookmark::before {
-        content: "☆";
+        content: "★";
         top: 0.2rem;
+        color: var(--bookmark)
     }
 
     &.button--bookmark.bookmarked::before {
-        content: "★";
+        color: var(--bookmark-active)
     }
 
     &.button--bookmark.bookmarked {
-        background-color: var(--bookmark);
-        color: rgb(25, 25, 25);
+        /*background-color: var(--bookmark-active);*/
+        /*color: rgb(25, 25, 25);*/
     }
 
     &.button--bookmark.bookmarked:hover {
-        background-color: var(--warning);
+        /*background-color: var(--warning);*/
     }
 
     &.button--clear {
@@ -358,7 +360,6 @@ p {
 
     .result-item:hover {
         background-color: var(--border-color);
-        /*transform: translateX(2px);*/
     }
 
     .result-name {
@@ -371,8 +372,12 @@ p {
     }
 
     .bookmark-indicator {
-      color: var(--bookmark);
-      margin-right: 0.25rem;
+        color: var(--bookmark);
+        margin-right: 0.25rem;
+
+        &.bookmark-indicator--active {
+            color: var(--bookmark-active);
+        }
     }
 
     .no-results {
