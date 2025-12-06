@@ -5958,7 +5958,7 @@
       },
       {
         "name": "Strangle",
-        "description": "Deals x2 damage against surprised creatures. THE TEN-EYED ORACLE"
+        "description": "Deals x2 damage against surprised creatures."
       }
     ],
     "source": "Core"
@@ -6020,7 +6020,7 @@
   {
     "name": "The Ten-Eyed Oracle",
     "description": "A floating mass of rubbery skin crusted with barnacles. Its ten eyestalks writhe like snakes, and a deep, circular scar mars its central body,linding what was once a large eye above a lipless maw. The Ten-Eyed Oracle stalks the Shadowdark, burbling mad ,prophesies and somehow moving freely between the lightless fathoms of the earth. The keepers of the deep lore suspect The Ten-Eyed Oracle was once a benevolent ally of mankind, but an unknown calamity drove it to insanity and reckless hatred.",
-    "level": 3,
+    "level": 10,
     "alignment": "Chaotic",
     "ac": 12,
     "armor_type": "",
