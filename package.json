@@ -1,5 +1,5 @@
 {
-  "name": "hello-world",
+  "name": "shadowdark-tome",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,6 +12,7 @@
     "vite": "^7.2.4"
   },
   "dependencies": {
-    "@owlbear-rodeo/sdk": "^3.1.0"
+    "@owlbear-rodeo/sdk": "^3.1.0",
+    "vite-plugin-static-copy": "^3.1.4"
   }
 }
