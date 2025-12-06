@@ -65,6 +65,7 @@ function renderApp() {
       <header class="header">
         <div class="search-row">
           <input type="text" id="search" class="search-input" placeholder="Search..." autocomplete="off" />
+          <button class="button button--clear hidden" id="clear-btn" title="Clear search">&#10799;</button>
           <button class="button button--help" id="help-btn" title="Search help">?</button>
         </div>
         <nav class="tabs">
@@ -107,6 +108,7 @@ function renderApp() {
   document.querySelectorAll('.button-tab').forEach(tab => {
     tab.addEventListener('click', handleTabClick)
   })
+  document.getElementById('clear-btn').addEventListener('click', resetSearch)
   document.getElementById('help-btn').addEventListener('click', showHelp)
   document.getElementById('help-close-btn').addEventListener('click', hideHelp)
   document.getElementById('help-overlay').addEventListener('click', (e) => {
@@ -124,8 +126,17 @@ function hideHelp() {
   document.getElementById('help-overlay').classList.add('hidden')
 }
 
+function resetSearch() {
+  currentSearch = ""
+  selectedItem = null
+  document.getElementById('search').value = ""
+  document.getElementById('clear-btn').classList.add("hidden")
+  renderResults()
+}
+
 function handleSearch(e) {
   currentSearch = e.target.value.toLowerCase().trim()
+  document.getElementById('clear-btn').classList[0 == currentSearch.length ? 'add' : 'remove']("hidden")
   selectedItem = null
   renderResults()
 }

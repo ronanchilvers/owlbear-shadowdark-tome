@@ -175,10 +175,21 @@ p {
         background-color: var(--warning);
     }
 
+    &.button--clear {
+        border: none;
+        background: transparent;
+        font-weight: 100;
+        font-size: 1.5rem;
+        line-height: 0;
+        position: absolute;
+        right: 2.6rem;
+        top: 0.5rem;
+    }
+
     /* Help button modifier (square) */
     &.button--help {
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
         padding: 0;
         flex-shrink: 0;
         border: 1px solid var(--border-color);
@@ -212,6 +223,7 @@ p {
     display: flex;
     gap: 0.25rem;
     align-items: center;
+    position: relative;
 
     .search-input {
         flex: 1;
@@ -258,10 +270,6 @@ p {
   justify-content: center;
   z-index: 100;
   padding: 1rem;
-
-  &.hidden {
-    display: none;
-  }
 }
 
 .help-content {
