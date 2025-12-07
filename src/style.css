@@ -6,7 +6,7 @@
   --text-primary: rgb(230, 230, 230);
   --text-secondary: rgb(180, 180, 180);
   --text-tertiary: rgb(100, 100, 100);
-  --accent: rgb(114, 135, 255);
+  --accent: rgb(187, 153, 255);
   --border-color: rgb(70, 70, 70);
   --success: #1ba303;
   --warning: #ce8a02;
@@ -166,15 +166,6 @@ p {
 
     &.button--bookmark.bookmarked::before {
         color: var(--bookmark-active)
-    }
-
-    &.button--bookmark.bookmarked {
-        /*background-color: var(--bookmark-active);*/
-        /*color: rgb(25, 25, 25);*/
-    }
-
-    &.button--bookmark.bookmarked:hover {
-        /*background-color: var(--warning);*/
     }
 
     &.button--clear {
