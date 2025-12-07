@@ -1,6 +1,7 @@
 {
   "name": "Shadowdark Tome",
   "version": "1.0.0",
+  "description": "A reference tome for the spells, monsters and items that appear in the Shadowdark RPG Core Rules. By kind permission of the Arcane Library.",
   "manifest_version": 1,
   "action": {
     "title": "Shadowdark Tome",
