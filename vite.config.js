@@ -16,6 +16,14 @@ export default defineConfig({
             src: path.resolve(__dirname, './manifest.json'),
             dest: './',
           },
+          {
+            src: path.resolve(__dirname, './icon.svg'),
+            dest: './',
+          },
+          {
+            src: path.resolve(__dirname, './CNAME'),
+            dest: './',
+          },
         ],
       }),
     ]
